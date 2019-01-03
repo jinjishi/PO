@@ -1,0 +1,132 @@
+package intership2.dao;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import intership2.dao.DbcpJdbcUtil;
+import intership2.dao.PO;
+import java.sql.Connection; 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.lang.Exception;
+public class PODAOImpl implements PODAO {
+	public boolean addPO(PO po) throws Exception {
+		boolean result=false;
+		Connection connection = null; 
+		PreparedStatement pStatement = null; 
+		try { 
+			connection = DbcpJdbcUtil.getConnection(); 
+		    String sql = "use shopping insert into PO(Orderid,Productid,Color,Size) values (?,?,?,?)";
+		    pStatement = connection.prepareStatement(sql);
+		pStatement.setString(1,po.GetterOrderid()); 
+		    pStatement.setString(2,po.GetterProductid()); 
+		    pStatement.setString(3,po.GetterColor()); 
+		    pStatement.setInt(4,po.GetterSize());
+		    pStatement.execute(); 
+		    result=true;
+		    System.out.println("result="+result);
+		    pStatement.close(); 
+		} catch (SQLException e) { 
+			e.printStackTrace();
+			result=false;
+			} finally { 
+				try { 
+					connection.close();
+					} catch (SQLException e) { 
+						e.printStackTrace();
+						}
+				}
+		return result;
+		}
+	public boolean delPO(String sql) throws Exception {
+		boolean result=false;
+		Connection connection = null; 
+		PreparedStatement pStatement = null; 
+		try {
+			connection = DbcpJdbcUtil.getConnection(); 
+			pStatement = connection.prepareStatement(sql); 
+			pStatement.execute();  
+			int count=pStatement.getUpdateCount();
+			if(count!=-1) {
+				result=true;
+			}
+			else {
+				result=false;
+			}
+			System.out.println("result="+result);
+		}catch (SQLException e) { 
+			e.printStackTrace();
+			result=false;
+			} finally { 
+				try { 
+					connection.close();
+					} catch (SQLException e) { 
+						e.printStackTrace();
+						}
+				}
+		return result;
+		}
+	public ArrayList<PO> getPO(String sql) throws Exception{
+		PreparedStatement pStatement = null; 
+		Connection connection = null;
+		ArrayList<PO> pos=new ArrayList<PO>();
+		boolean result=false;
+		try {
+			connection = DbcpJdbcUtil.getConnection(); 
+		    pStatement =connection.prepareStatement(sql);
+			ResultSet rs=pStatement.executeQuery();
+			while(rs.next()) {
+				PO po=new PO();
+				po.SetterOrderid(rs.getString(1));
+				po.SetterProductid(rs.getString(2));
+				po.SetterColor(rs.getString(3));
+				po.SetterSize(rs.getInt(4));
+				System.out.printf(po.GetterOrderid()+"\t");
+				System.out.printf(po.GetterProductid()+"\t");
+				System.out.printf(po.GetterColor()+"\t");
+				System.out.printf(po.GetterSize()+"\n");
+			}
+			result=true;
+			System.out.println("result="+result);
+		}catch (SQLException e) { 
+			e.printStackTrace();
+			} 
+				try { 
+					connection.close();
+					} catch (SQLException e) { 
+						e.printStackTrace();
+						}
+				return pos;
+				}
+	@SuppressWarnings("null")
+	public boolean updatePO(String sql) throws Exception
+	{
+		Connection connection = null;
+		PreparedStatement pStatement = null; 
+		boolean result=false;
+		try {
+			connection = DbcpJdbcUtil.getConnection(); 
+			pStatement=connection.prepareStatement(sql);
+			pStatement.execute();  
+			int count=pStatement.getUpdateCount();
+			if(count!=-1)
+			{
+				result=true;
+			}
+			else
+			{
+				result=false;
+			}
+			System.out.println("result="+result);
+		}catch (SQLException e) { 
+				e.printStackTrace();
+				result=false;
+				} finally { 
+					try { 
+						connection.close();
+						} catch (SQLException e) { 
+							e.printStackTrace();
+							}
+					}
+			return result;
+			}
+	}
