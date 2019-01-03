@@ -1,0 +1,12 @@
+package intership2.dao;
+import java.lang.Exception;
+import java.util.ArrayList;
+
+import intership2.dao.PO;
+public interface PODAO {
+	public boolean addPO(PO po) throws Exception; 
+	public boolean delPO(String sql) throws Exception; 
+	public boolean updatePO(String sql) throws Exception;
+	public ArrayList<PO> getPO(String sql) throws Exception;
+
+}
